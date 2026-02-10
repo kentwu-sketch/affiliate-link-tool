@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- App 基本資訊 -->
+    <title>聯盟網工具</title>
+    <meta name="description" content="快速生成聯盟網追蹤連結的行動工具">
+    <meta name="theme-color" content="#667eea">
+    
+    <!-- Apple iOS 支援 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="聯盟網工具">
+    
+    <!-- Apple 圖示 - 使用外部圖片 -->
+    <link rel="apple-touch-icon" href="app-icon-192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="app-icon-512.png">
+    
+    <!-- Android Chrome -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" sizes="192x192" href="app-icon-192.png">
+    <link rel="icon" sizes="512x512" href="app-icon-512.png">
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        }
+
+        .app-wrapper {
+            min-height: 100vh;
+            padding: 20px;
+            padding-top: max(20px, env(safe-area-inset-top));
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-size: 15px;
+            font-weight: 600;
+            color: #999;
+            cursor: pointer;
+            transition: all 0.3s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab:active {
+            transform: scale(0.98);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title .badge {
+            background: #667eea;
+            color: white;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 8px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 40px;
+        }
+
+        .subid-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .subid-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .subid-item label {
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .subid-item input {
+            padding: 10px 12px;
+            font-size: 14px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 10px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .btn-danger {
+            background: #ff4757;
+            color: white;
+        }
+
+        .btn-success {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .result-box {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .result-box.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 10px;
+        }
+
+        .result-content {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            word-break: break-all;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #333;
+            max-height: 200px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: max(30px, env(safe-area-inset-bottom));
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            max-width: 90%;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #1565c0;
+            margin-bottom: 15px;
+        }
+
+        .toggle-section {
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .toggle-section::after {
+            content: '▼';
+            float: right;
+            transition: transform 0.3s;
+            font-size: 12px;
+        }
+
+        .toggle-section.collapsed::after {
+            transform: rotate(-90deg);
+        }
+
+        .collapsible-content {
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .collapsible-content.collapsed {
+            max-height: 0;
+        }
+
+        .merchant-list {
+            margin-top: 15px;
+        }
+
+        .merchant-item {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .merchant-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .merchant-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+
+        .merchant-url {
+            font-size: 12px;
+            color: #666;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .merchant-actions {
+            display: flex;
+            gap: 8px;
+            margin-left: 10px;
+            flex-shrink: 0;
+        }
+
+        .btn-icon {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-icon:active {
+            transform: scale(0.95);
+        }
+
+        .btn-edit {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #ff4757;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-group .btn {
+            margin-top: 0;
+        }
+
+        .install-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .install-banner.show {
+            display: flex;
+        }
+
+        .install-banner-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+        .install-banner-content {
+            flex: 1;
+        }
+
+        .install-banner-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .install-banner-text {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .install-banner-close {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+
+            .subid-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .merchant-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .merchant-actions {
+                margin-left: 0;
+                margin-top: 10px;
+                width: 100%;
+            }
+
+            .merchant-actions .btn-icon {
+                flex: 1;
+            }
+        }
+
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .splash-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .splash-logo {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 20px;
+            animation: bounce 1s infinite;
+        }
+
+        .splash-text {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 載入畫面 -->
+    <div class="splash-screen" id="splashScreen">
+        <img src="app-icon-192.png" alt="Logo" class="splash-logo">
+        <div class="splash-text">聯盟網工具</div>
+    </div>
+
+    <div class="app-wrapper">
+        <div class="container">
+            <!-- 安裝提示 -->
+            <div class="install-banner" id="installBanner">
+                <div class="install-banner-icon">📱</div>
+                <div class="install-banner-content">
+                    <div class="install-banner-title">加入主畫面</div>
+                    <div class="install-banner-text">點擊分享按鈕,選擇「加入主畫面」</div>
+                </div>
+                <button class="install-banner-close" onclick="closeInstallBanner()">×</button>
+            </div>
+
+            <h1>🔗 聯盟網追蹤連結生成器</h1>
+            <p class="subtitle">快速生成聯盟網追蹤連結 Deeplink</p>
+
+            <!-- 分頁標籤 -->
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('generate')">🚀 生成連結</button>
+                <button class="tab" onclick="switchTab('manage')">⚙️ 管理廠商</button>
+            </div>
+
+            <!-- 生成連結頁面 -->
+            <div id="generateTab" class="tab-content active">
+                <div class="section">
+                    <label for="merchantSelect">
+                        <div class="section-title">1️⃣ 選擇廠商 <span class="badge">必選</span></div>
+                    </label>
+                    <select id="merchantSelect" onchange="onMerchantChange()">
+                        <option value="">-- 請選擇廠商 --</option>
+                    </select>
+                </div>
+
+                <div class="section">
+                    <label for="targetUrl">
+                        <div class="section-title">2️⃣ 目標商品網址 <span class="badge">選填</span></div>
+                    </label>
+                    <div class="info-box">
+                        💡 要推廣的特定商品頁面(不填則使用預設連結)
+                    </div>
+                    <textarea 
+                        id="targetUrl" 
+                        placeholder="例如: https://www.nike.com/tw/t/product-name/ABC123"
+                        rows="3"
+                    ></textarea>
+                </div>
+
+                <div class="section">
+                    <div class="section-title toggle-section" id="subidToggle">
+                        3️⃣ 追蹤標籤 Sub ID <span class="badge">選填</span>
+                    </div>
+                    <div class="collapsible-content" id="subidContent">
+                        <div class="info-box">
+                            💡 用來識別訂單來源(例如:會員ID、廣告來源等)
+                        </div>
+                        <div class="subid-grid">
+                            <div class="subid-item">
+                                <label for="subid1">sub_id1</label>
+                                <input type="text" id="subid1" placeholder="例如: member123">
+                            </div>
+                            <div class="subid-item">
+                                <label for="subid2">sub_id2</label>
+                                <input type="text" id="subid2" placeholder="例如: facebook">
+                            </div>
+                            <div class="subid-item">
+                                <label for="subid3">sub_id3</label>
+                                <input type="text" id="subid3" placeholder="">
+                            </div>
+                            <div class="subid-item">
+                                <label for="subid4">sub_id4</label>
+                                <input type="text" id="subid4" placeholder="">
+                            </div>
+                            <div class="subid-item">
+                                <label for="subid5">sub_id5</label>
+                                <input type="text" id="subid5" placeholder="">
+                            </div>
+                            <div class="subid-item">
+                                <label for="uniqueid">unique_id</label>
+                                <input type="text" id="uniqueid" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="generateLink()">✨ 生成追蹤連結</button>
+                <button class="btn btn-secondary" onclick="clearGenerate()">🗑️ 清空欄位</button>
+
+                <div class="result-box" id="resultBox">
+                    <div class="result-label">✅ 生成的追蹤連結:</div>
+                    <div class="result-content" id="resultContent"></div>
+                    <button class="btn btn-primary" onclick="copyResult()">📋 複製連結</button>
+                </div>
+            </div>
+
+            <!-- 管理廠商頁面 -->
+            <div id="manageTab" class="tab-content">
+                <div class="info-box">
+                    💡 在這裡新增和管理你的廠商追蹤連結
+                </div>
+
+                <button class="btn btn-success" onclick="showAddModal()">➕ 新增廠商</button>
+
+                <div class="merchant-list" id="merchantList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增/編輯廠商 Modal -->
+    <div class="modal" id="merchantModal">
+        <div class="modal-content">
+            <div class="modal-header" id="modalTitle">新增廠商</div>
+            
+            <div class="form-group">
+                <label for="modalMerchantName">廠商名稱 *</label>
+                <input type="text" id="modalMerchantName" placeholder="例如: Nike">
+            </div>
+
+            <div class="form-group">
+                <label for="modalMerchantUrl">基礎追蹤連結 *</label>
+                <textarea 
+                    id="modalMerchantUrl" 
+                    placeholder="例如: https://vbtrax.com/track/clicks/3559/..."
+                    rows="4"
+                ></textarea>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="saveMerchant()">💾 儲存</button>
+                <button class="btn btn-secondary" onclick="closeModal()">✖️ 取消</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let merchants = [];
+        let editingIndex = -1;
+
+        function init() {
+            setTimeout(() => {
+                document.getElementById('splashScreen').classList.add('hidden');
+            }, 1000);
+
+            loadMerchants();
+            renderMerchantList();
+            renderMerchantSelect();
+            checkInstallPrompt();
+            
+            document.getElementById('subidToggle').addEventListener('click', function() {
+                const content = document.getElementById('subidContent');
+                const toggle = document.getElementById('subidToggle');
+                content.classList.toggle('collapsed');
+                toggle.classList.toggle('collapsed');
+            });
+
+            document.addEventListener('gesturestart', function (e) {
+                e.preventDefault();
+            });
+        }
+
+        function checkInstallPrompt() {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
+                              || window.navigator.standalone 
+                              || document.referrer.includes('android-app://');
+            
+            const bannerDismissed = localStorage.getItem('installBannerDismissed');
+            
+            if (!isStandalone && !bannerDismissed) {
+                document.getElementById('installBanner').classList.add('show');
+            }
+        }
+
+        function closeInstallBanner() {
+            document.getElementById('installBanner').classList.remove('show');
+            localStorage.setItem('installBannerDismissed', 'true');
+        }
+
+        function loadMerchants() {
+            const saved = localStorage.getItem('affiliateMerchants');
+            if (saved) {
+                merchants = JSON.parse(saved);
+            } else {
+                merchants = [
+                    {
+                        name: 'Nike',
+                        url: 'https://vbtrax.com/track/clicks/3559/c627c2b99b0221ddfc9cbd2e8d2b8914736248c176eff0ab416db100620d'
+                    }
+                ];
+                saveMerchants();
+            }
+        }
+
+        function saveMerchants() {
+            localStorage.setItem('affiliateMerchants', JSON.stringify(merchants));
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            if (tabName === 'generate') {
+                document.getElementById('generateTab').classList.add('active');
+            } else if (tabName === 'manage') {
+                document.getElementById('manageTab').classList.add('active');
+                renderMerchantList();
+            }
+        }
+
+        function renderMerchantList() {
+            const listEl = document.getElementById('merchantList');
+            
+            if (merchants.length === 0) {
+                listEl.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📦</div>
+                        <div>尚未新增任何廠商</div>
+                        <div style="font-size: 13px; margin-top: 8px; color: #bbb;">點擊上方按鈕新增第一個廠商</div>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            merchants.forEach((merchant, index) => {
+                html += `
+                    <div class="merchant-item">
+                        <div class="merchant-info">
+                            <div class="merchant-name">${escapeHtml(merchant.name)}</div>
+                            <div class="merchant-url">${escapeHtml(merchant.url)}</div>
+                        </div>
+                        <div class="merchant-actions">
+                            <button class="btn-icon btn-edit" onclick="editMerchant(${index})">✏️ 編輯</button>
+                            <button class="btn-icon btn-delete" onclick="deleteMerchant(${index})">🗑️ 刪除</button>
+                        </div>
+                    </div>
+                `;
+            });
+            listEl.innerHTML = html;
+        }
+
+        function renderMerchantSelect() {
+            const selectEl = document.getElementById('merchantSelect');
+            const currentValue = selectEl.value;
+            
+            let html = '<option value="">-- 請選擇廠商 --</option>';
+            merchants.forEach((merchant, index) => {
+                html += `<option value="${index}">${escapeHtml(merchant.name)}</option>`;
+            });
+            
+            selectEl.innerHTML = html;
+            
+            if (currentValue && merchants[currentValue]) {
+                selectEl.value = currentValue;
+            }
+        }
+
+        function onMerchantChange() {
+            const index = document.getElementById('merchantSelect').value;
+            if (index !== '') {
+                showToast(`✅ 已選擇: ${merchants[index].name}`);
+            }
+        }
+
+        function showAddModal() {
+            editingIndex = -1;
+            document.getElementById('modalTitle').textContent = '新增廠商';
+            document.getElementById('modalMerchantName').value = '';
+            document.getElementById('modalMerchantUrl').value = '';
+            document.getElementById('merchantModal').classList.add('show');
+        }
+
+        function editMerchant(index) {
+            editingIndex = index;
+            const merchant = merchants[index];
+            document.getElementById('modalTitle').textContent = '編輯廠商';
+            document.getElementById('modalMerchantName').value = merchant.name;
+            document.getElementById('modalMerchantUrl').value = merchant.url;
+            document.getElementById('merchantModal').classList.add('show');
+        }
+
+        function saveMerchant() {
+            const name = document.getElementById('modalMerchantName').value.trim();
+            const url = document.getElementById('modalMerchantUrl').value.trim();
+
+            if (!name) {
+                showToast('❌ 請輸入廠商名稱');
+                return;
+            }
+
+            if (!url) {
+                showToast('❌ 請輸入基礎追蹤連結');
+                return;
+            }
+
+            const merchant = { name, url };
+
+            if (editingIndex === -1) {
+                merchants.push(merchant);
+                showToast('✅ 廠商新增成功!');
+            } else {
+                merchants[editingIndex] = merchant;
+                showToast('✅ 廠商更新成功!');
+            }
+
+            saveMerchants();
+            renderMerchantList();
+            renderMerchantSelect();
+            closeModal();
+        }
+
+        function deleteMerchant(index) {
+            if (confirm(`確定要刪除「${merchants[index].name}」嗎?`)) {
+                merchants.splice(index, 1);
+                saveMerchants();
+                renderMerchantList();
+                renderMerchantSelect();
+                showToast('✅ 廠商已刪除');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('merchantModal').classList.remove('show');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        function doubleEncodeURL(url) {
+            return encodeURIComponent(encodeURIComponent(url));
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function generateLink() {
+            const merchantIndex = document.getElementById('merchantSelect').value;
+            const targetUrl = document.getElementById('targetUrl').value.trim();
+            
+            if (merchantIndex === '') {
+                showToast('❌ 請先選擇廠商');
+                return;
+            }
+
+            const baseUrl = merchants[merchantIndex].url;
+            let finalUrl = baseUrl;
+            let hasSubIds = false;
+
+            const subIds = {
+                'subid_1': document.getElementById('subid1').value.trim(),
+                'subid_2': document.getElementById('subid2').value.trim(),
+                'subid_3': document.getElementById('subid3').value.trim(),
+                'subid_4': document.getElementById('subid4').value.trim(),
+                'subid_5': document.getElementById('subid5').value.trim(),
+                'unique_id': document.getElementById('uniqueid').value.trim()
+            };
+
+            const subIdParams = [];
+            for (let key in subIds) {
+                if (subIds[key]) {
+                    subIdParams.push(`${key}=${encodeURIComponent(subIds[key])}`);
+                    hasSubIds = true;
+                }
+            }
+
+            if (hasSubIds) {
+                finalUrl += '?' + subIdParams.join('?');
+            }
+
+            if (targetUrl) {
+                const encodedTarget = doubleEncodeURL(targetUrl);
+                const connector = hasSubIds ? '&t=' : '?t=';
+                finalUrl += connector + encodedTarget;
+            }
+
+            document.getElementById('resultContent').textContent = finalUrl;
+            document.getElementById('resultBox').classList.add('show');
+            
+            showToast('✅ 連結生成成功!');
+        }
+
+        function copyResult() {
+            const resultText = document.getElementById('resultContent').textContent;
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(resultText).then(() => {
+                    showToast('📋 已複製到剪貼簿!');
+                }).catch(() => {
+                    fallbackCopy(resultText);
+                });
+            } else {
+                fallbackCopy(resultText);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast('📋 已複製到剪貼簿!');
+            } catch (err) {
+                showToast('❌ 複製失敗,請手動複製');
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function clearGenerate() {
+            document.getElementById('merchantSelect').value = '';
+            document.getElementById('targetUrl').value = '';
+            document.getElementById('subid1').value = '';
+            document.getElementById('subid2').value = '';
+            document.getElementById('subid3').value = '';
+            document.getElementById('subid4').value = '';
+            document.getElementById('subid5').value = '';
+            document.getElementById('uniqueid').value = '';
+            document.getElementById('resultBox').classList.remove('show');
+            showToast('🗑️ 已清空欄位');
+        }
+
+        document.getElementById('merchantModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
