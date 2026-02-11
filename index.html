@@ -1179,6 +1179,28 @@
         });
 
         window.addEventListener('load', init);
+
+        // 註冊 Service Worker 以支援自動更新
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./service-worker.js')
+                .then(registration => {
+                    console.log('Service Worker 註冊成功');
+                    
+                    // 檢查更新
+                    registration.addEventListener('updatefound', () => {
+                        const newWorker = registration.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                // 有新版本可用
+                                if (confirm('發現新版本!是否要立即更新?')) {
+                                    window.location.reload();
+                                }
+                            }
+                        });
+                    });
+                })
+                .catch(err => console.log('Service Worker 註冊失敗:', err));
+        }
     </script>
 </body>
 </html>
