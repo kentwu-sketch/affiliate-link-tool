@@ -4,26 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
-    <!-- App 基本資訊 -->
     <title>聯盟網工具</title>
     <meta name="description" content="快速生成聯盟網追蹤連結的行動工具">
     <meta name="theme-color" content="#667eea">
     
-    <!-- Apple iOS 支援 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="聯盟網工具">
     
-    <!-- Apple 圖示 - 使用外部圖片 -->
     <link rel="apple-touch-icon" href="app-icon-192.png">
     <link rel="apple-touch-icon" sizes="512x512" href="app-icon-512.png">
     
-    <!-- Android Chrome -->
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="icon" sizes="192x192" href="app-icon-192.png">
     <link rel="icon" sizes="512x512" href="app-icon-512.png">
     
-    <!-- Manifest -->
     <link rel="manifest" href="manifest.json">
     
     <style>
@@ -170,13 +165,54 @@
             resize: vertical;
         }
 
-        select {
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            padding-right: 40px;
+        .detected-merchant {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .detected-merchant.show {
+            display: flex;
+        }
+
+        .detected-merchant-icon {
+            font-size: 24px;
+        }
+
+        .detected-merchant-text {
+            flex: 1;
+        }
+
+        .detected-merchant-name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .detected-merchant-domain {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+
+        .error-box {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            color: #c62828;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .error-box.show {
+            display: block;
         }
 
         .subid-grid {
@@ -352,21 +388,36 @@
             border-radius: 10px;
             padding: 15px;
             margin-bottom: 10px;
+        }
+
+        .merchant-item-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-
-        .merchant-info {
-            flex: 1;
-            min-width: 0;
+            margin-bottom: 10px;
         }
 
         .merchant-name {
             font-weight: 600;
             color: #333;
-            margin-bottom: 5px;
             font-size: 15px;
+        }
+
+        .merchant-domains {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .merchant-domain-tag {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-size: 11px;
         }
 
         .merchant-url {
@@ -380,11 +431,11 @@
         .merchant-actions {
             display: flex;
             gap: 8px;
-            margin-left: 10px;
-            flex-shrink: 0;
+            margin-top: 10px;
         }
 
         .btn-icon {
+            flex: 1;
             padding: 8px 12px;
             border: none;
             border-radius: 6px;
@@ -462,6 +513,37 @@
             margin-bottom: 15px;
         }
 
+        .domain-input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .domain-input-group input {
+            flex: 1;
+        }
+
+        .domain-input-group button {
+            padding: 12px 15px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .add-domain-btn {
+            padding: 8px 12px;
+            background: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
         .btn-group {
             display: flex;
             gap: 10px;
@@ -470,85 +552,6 @@
 
         .btn-group .btn {
             margin-top: 0;
-        }
-
-        .install-banner {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            display: none;
-            align-items: center;
-            gap: 15px;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .install-banner.show {
-            display: flex;
-        }
-
-        .install-banner-icon {
-            font-size: 32px;
-            flex-shrink: 0;
-        }
-
-        .install-banner-content {
-            flex: 1;
-        }
-
-        .install-banner-title {
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .install-banner-text {
-            font-size: 13px;
-            opacity: 0.9;
-        }
-
-        .install-banner-close {
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 20px 15px;
-            }
-            
-            h1 {
-                font-size: 20px;
-            }
-
-            .subid-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .merchant-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .merchant-actions {
-                margin-left: 0;
-                margin-top: 10px;
-                width: 100%;
-            }
-
-            .merchant-actions .btn-icon {
-                flex: 1;
-            }
         }
 
         .splash-screen {
@@ -588,64 +591,67 @@
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
         }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+
+            .subid-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- 載入畫面 -->
     <div class="splash-screen" id="splashScreen">
-        <img src="app-icon-192.png" alt="Logo" class="splash-logo">
+        <img src="app-icon-192.png" alt="Logo" class="splash-logo" onerror="this.style.display='none'">
         <div class="splash-text">聯盟網工具</div>
     </div>
 
     <div class="app-wrapper">
         <div class="container">
-            <!-- 安裝提示 -->
-            <div class="install-banner" id="installBanner">
-                <div class="install-banner-icon">📱</div>
-                <div class="install-banner-content">
-                    <div class="install-banner-title">加入主畫面</div>
-                    <div class="install-banner-text">點擊分享按鈕,選擇「加入主畫面」</div>
-                </div>
-                <button class="install-banner-close" onclick="closeInstallBanner()">×</button>
-            </div>
-
             <h1>🔗 聯盟網追蹤連結生成器</h1>
-            <p class="subtitle">快速生成聯盟網追蹤連結 Deeplink</p>
+            <p class="subtitle">貼上網址,自動生成追蹤連結</p>
 
-            <!-- 分頁標籤 -->
             <div class="tabs">
                 <button class="tab active" onclick="switchTab('generate')">🚀 生成連結</button>
-                <button class="tab" onclick="switchTab('manage')">⚙️ 管理廠商</button>
+                <button class="tab" onclick="switchTab('manage')">⚙️ 管理品牌</button>
             </div>
 
-            <!-- 生成連結頁面 -->
             <div id="generateTab" class="tab-content active">
                 <div class="section">
-                    <label for="merchantSelect">
-                        <div class="section-title">1️⃣ 選擇廠商 <span class="badge">必選</span></div>
-                    </label>
-                    <select id="merchantSelect" onchange="onMerchantChange()">
-                        <option value="">-- 請選擇廠商 --</option>
-                    </select>
-                </div>
-
-                <div class="section">
                     <label for="targetUrl">
-                        <div class="section-title">2️⃣ 目標商品網址 <span class="badge">選填</span></div>
+                        <div class="section-title">1️⃣ 貼上商品網址 <span class="badge">必填</span></div>
                     </label>
                     <div class="info-box">
-                        💡 要推廣的特定商品頁面(不填則使用預設連結)
+                        💡 貼上後系統會自動偵測品牌並生成追蹤連結
                     </div>
                     <textarea 
                         id="targetUrl" 
                         placeholder="例如: https://www.nike.com/tw/t/product-name/ABC123"
                         rows="3"
+                        oninput="detectMerchant()"
                     ></textarea>
+                    
+                    <div class="detected-merchant" id="detectedMerchant">
+                        <div class="detected-merchant-icon">✓</div>
+                        <div class="detected-merchant-text">
+                            <div class="detected-merchant-name" id="detectedName"></div>
+                            <div class="detected-merchant-domain" id="detectedDomain"></div>
+                        </div>
+                    </div>
+
+                    <div class="error-box" id="errorBox"></div>
                 </div>
 
                 <div class="section">
                     <div class="section-title toggle-section" id="subidToggle">
-                        3️⃣ 追蹤標籤 Sub ID <span class="badge">選填</span>
+                        2️⃣ 追蹤標籤 Sub ID <span class="badge">選填</span>
                     </div>
                     <div class="collapsible-content" id="subidContent">
                         <div class="info-box">
@@ -690,31 +696,39 @@
                 </div>
             </div>
 
-            <!-- 管理廠商頁面 -->
             <div id="manageTab" class="tab-content">
                 <div class="info-box">
-                    💡 在這裡新增和管理你的廠商追蹤連結
+                    💡 設定品牌名稱、合作網域和追蹤連結
                 </div>
 
-                <button class="btn btn-success" onclick="showAddModal()">➕ 新增廠商</button>
+                <button class="btn btn-success" onclick="showAddModal()">➕ 新增品牌</button>
 
                 <div class="merchant-list" id="merchantList"></div>
             </div>
         </div>
     </div>
 
-    <!-- 新增/編輯廠商 Modal -->
     <div class="modal" id="merchantModal">
         <div class="modal-content">
-            <div class="modal-header" id="modalTitle">新增廠商</div>
+            <div class="modal-header" id="modalTitle">新增品牌</div>
             
             <div class="form-group">
-                <label for="modalMerchantName">廠商名稱 *</label>
+                <label for="modalMerchantName">品牌名稱 *</label>
                 <input type="text" id="modalMerchantName" placeholder="例如: Nike">
             </div>
 
             <div class="form-group">
-                <label for="modalMerchantUrl">基礎追蹤連結 *</label>
+                <label>合作網域 * <small style="color: #999;">(可多個)</small></label>
+                <div id="domainInputs">
+                    <div class="domain-input-group">
+                        <input type="text" class="domain-input" placeholder="例如: www.nike.com/tw">
+                    </div>
+                </div>
+                <button class="add-domain-btn" onclick="addDomainInput()">+ 新增網域</button>
+            </div>
+
+            <div class="form-group">
+                <label for="modalMerchantUrl">預設追蹤連結 *</label>
                 <textarea 
                     id="modalMerchantUrl" 
                     placeholder="例如: https://vbtrax.com/track/clicks/3559/..."
@@ -734,6 +748,7 @@
     <script>
         let merchants = [];
         let editingIndex = -1;
+        let detectedMerchantIndex = -1;
 
         function init() {
             setTimeout(() => {
@@ -742,8 +757,6 @@
 
             loadMerchants();
             renderMerchantList();
-            renderMerchantSelect();
-            checkInstallPrompt();
             
             document.getElementById('subidToggle').addEventListener('click', function() {
                 const content = document.getElementById('subidContent');
@@ -757,32 +770,36 @@
             });
         }
 
-        function checkInstallPrompt() {
-            const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
-                              || window.navigator.standalone 
-                              || document.referrer.includes('android-app://');
-            
-            const bannerDismissed = localStorage.getItem('installBannerDismissed');
-            
-            if (!isStandalone && !bannerDismissed) {
-                document.getElementById('installBanner').classList.add('show');
-            }
-        }
-
-        function closeInstallBanner() {
-            document.getElementById('installBanner').classList.remove('show');
-            localStorage.setItem('installBannerDismissed', 'true');
-        }
-
         function loadMerchants() {
             const saved = localStorage.getItem('affiliateMerchants');
             if (saved) {
                 merchants = JSON.parse(saved);
+                
+                // 修正舊版資料格式(從單一 url 轉換為 domains 陣列和 baseUrl)
+                merchants = merchants.map(m => {
+                    // 如果是舊版格式(有 url 但沒有 domains)
+                    if (m.url && !m.domains) {
+                        return {
+                            name: m.name,
+                            domains: [], // 舊版沒有網域資訊,設為空陣列
+                            baseUrl: m.url
+                        };
+                    }
+                    // 如果 domains 不是陣列,修正它
+                    if (!Array.isArray(m.domains)) {
+                        m.domains = [];
+                    }
+                    return m;
+                });
+                
+                saveMerchants(); // 儲存修正後的格式
             } else {
+                // 預設範例品牌
                 merchants = [
                     {
                         name: 'Nike',
-                        url: 'https://vbtrax.com/track/clicks/3559/c627c2b99b0221ddfc9cbd2e8d2b8914736248c176eff0ab416db100620d'
+                        domains: ['www.nike.com/tw'],
+                        baseUrl: 'https://vbtrax.com/track/clicks/3559/c627c2b99b0221ddfc9cbd2e8d2b8914736248c176eff0ab416db100620d'
                     }
                 ];
                 saveMerchants();
@@ -791,6 +808,67 @@
 
         function saveMerchants() {
             localStorage.setItem('affiliateMerchants', JSON.stringify(merchants));
+        }
+
+        // 從網址中提取網域
+        function extractDomain(url) {
+            try {
+                const urlObj = new URL(url);
+                // 返回 hostname + pathname 的前幾層
+                let domain = urlObj.hostname;
+                // 如果有路徑,加上第一層路徑
+                const pathParts = urlObj.pathname.split('/').filter(p => p);
+                if (pathParts.length > 0) {
+                    domain += '/' + pathParts[0];
+                }
+                return domain;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // 偵測品牌
+        function detectMerchant() {
+            const url = document.getElementById('targetUrl').value.trim();
+            const detectedBox = document.getElementById('detectedMerchant');
+            const errorBox = document.getElementById('errorBox');
+            
+            // 隱藏兩個提示框
+            detectedBox.classList.remove('show');
+            errorBox.classList.remove('show');
+            detectedMerchantIndex = -1;
+
+            if (!url) return;
+
+            // 提取網域
+            const urlDomain = extractDomain(url);
+            if (!urlDomain) {
+                errorBox.textContent = '⚠️ 網址格式不正確,請檢查後重試';
+                errorBox.classList.add('show');
+                return;
+            }
+
+            // 嘗試匹配品牌
+            for (let i = 0; i < merchants.length; i++) {
+                const merchant = merchants[i];
+                const domains = Array.isArray(merchant.domains) ? merchant.domains : [];
+                
+                for (const domain of domains) {
+                    // 檢查網域是否匹配
+                    if (urlDomain.includes(domain) || domain.includes(urlDomain)) {
+                        // 找到匹配的品牌!
+                        detectedMerchantIndex = i;
+                        document.getElementById('detectedName').textContent = `已偵測: ${merchant.name}`;
+                        document.getElementById('detectedDomain').textContent = `匹配網域: ${domain}`;
+                        detectedBox.classList.add('show');
+                        return;
+                    }
+                }
+            }
+
+            // 沒有找到匹配的品牌
+            errorBox.innerHTML = '⚠️ 此網域尚未設定<br><small>請到「管理品牌」新增此品牌的追蹤連結</small>';
+            errorBox.classList.add('show');
         }
 
         function switchTab(tabName) {
@@ -818,8 +896,8 @@
                 listEl.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-state-icon">📦</div>
-                        <div>尚未新增任何廠商</div>
-                        <div style="font-size: 13px; margin-top: 8px; color: #bbb;">點擊上方按鈕新增第一個廠商</div>
+                        <div>尚未新增任何品牌</div>
+                        <div style="font-size: 13px; margin-top: 8px; color: #bbb;">點擊上方按鈕新增第一個品牌</div>
                     </div>
                 `;
                 return;
@@ -827,12 +905,19 @@
 
             let html = '';
             merchants.forEach((merchant, index) => {
+                // 安全檢查: 確保 domains 是陣列
+                const domains = Array.isArray(merchant.domains) ? merchant.domains : [];
+                const domainsHtml = domains.length > 0 
+                    ? domains.map(d => `<span class="merchant-domain-tag">${escapeHtml(d)}</span>`).join('')
+                    : '<span class="merchant-domain-tag" style="background: #ffebee; color: #c62828;">⚠️ 未設定網域</span>';
+                
                 html += `
                     <div class="merchant-item">
-                        <div class="merchant-info">
+                        <div class="merchant-item-header">
                             <div class="merchant-name">${escapeHtml(merchant.name)}</div>
-                            <div class="merchant-url">${escapeHtml(merchant.url)}</div>
                         </div>
+                        <div class="merchant-domains">${domainsHtml}</div>
+                        <div class="merchant-url">${escapeHtml(merchant.baseUrl || merchant.url || '未設定')}</div>
                         <div class="merchant-actions">
                             <button class="btn-icon btn-edit" onclick="editMerchant(${index})">✏️ 編輯</button>
                             <button class="btn-icon btn-delete" onclick="deleteMerchant(${index})">🗑️ 刪除</button>
@@ -843,73 +928,109 @@
             listEl.innerHTML = html;
         }
 
-        function renderMerchantSelect() {
-            const selectEl = document.getElementById('merchantSelect');
-            const currentValue = selectEl.value;
-            
-            let html = '<option value="">-- 請選擇廠商 --</option>';
-            merchants.forEach((merchant, index) => {
-                html += `<option value="${index}">${escapeHtml(merchant.name)}</option>`;
-            });
-            
-            selectEl.innerHTML = html;
-            
-            if (currentValue && merchants[currentValue]) {
-                selectEl.value = currentValue;
-            }
-        }
-
-        function onMerchantChange() {
-            const index = document.getElementById('merchantSelect').value;
-            if (index !== '') {
-                showToast(`✅ 已選擇: ${merchants[index].name}`);
-            }
+        function addDomainInput() {
+            const container = document.getElementById('domainInputs');
+            const newInput = document.createElement('div');
+            newInput.className = 'domain-input-group';
+            newInput.innerHTML = `
+                <input type="text" class="domain-input" placeholder="例如: pages.tw.coupang.com">
+                <button onclick="this.parentElement.remove()">✖</button>
+            `;
+            container.appendChild(newInput);
         }
 
         function showAddModal() {
             editingIndex = -1;
-            document.getElementById('modalTitle').textContent = '新增廠商';
+            document.getElementById('modalTitle').textContent = '新增品牌';
             document.getElementById('modalMerchantName').value = '';
             document.getElementById('modalMerchantUrl').value = '';
+            
+            // 重置網域輸入
+            document.getElementById('domainInputs').innerHTML = `
+                <div class="domain-input-group">
+                    <input type="text" class="domain-input" placeholder="例如: www.nike.com/tw">
+                </div>
+            `;
+            
             document.getElementById('merchantModal').classList.add('show');
         }
 
         function editMerchant(index) {
             editingIndex = index;
             const merchant = merchants[index];
-            document.getElementById('modalTitle').textContent = '編輯廠商';
+            document.getElementById('modalTitle').textContent = '編輯品牌';
             document.getElementById('modalMerchantName').value = merchant.name;
-            document.getElementById('modalMerchantUrl').value = merchant.url;
+            document.getElementById('modalMerchantUrl').value = merchant.baseUrl || merchant.url || '';
+            
+            // 填入網域 - 安全檢查
+            const container = document.getElementById('domainInputs');
+            container.innerHTML = '';
+            
+            const domains = Array.isArray(merchant.domains) ? merchant.domains : [];
+            
+            if (domains.length === 0) {
+                // 如果沒有網域,至少顯示一個空輸入框
+                container.innerHTML = `
+                    <div class="domain-input-group">
+                        <input type="text" class="domain-input" placeholder="例如: www.nike.com/tw">
+                    </div>
+                `;
+            } else {
+                domains.forEach((domain, i) => {
+                    const inputGroup = document.createElement('div');
+                    inputGroup.className = 'domain-input-group';
+                    inputGroup.innerHTML = `
+                        <input type="text" class="domain-input" value="${escapeHtml(domain)}" placeholder="例如: www.nike.com/tw">
+                        ${i > 0 ? '<button onclick="this.parentElement.remove()">✖</button>' : ''}
+                    `;
+                    container.appendChild(inputGroup);
+                });
+            }
+            
             document.getElementById('merchantModal').classList.add('show');
         }
 
         function saveMerchant() {
             const name = document.getElementById('modalMerchantName').value.trim();
-            const url = document.getElementById('modalMerchantUrl').value.trim();
+            const baseUrl = document.getElementById('modalMerchantUrl').value.trim();
+            
+            // 收集所有網域
+            const domainInputs = document.querySelectorAll('.domain-input');
+            const domains = [];
+            domainInputs.forEach(input => {
+                const domain = input.value.trim();
+                if (domain) {
+                    domains.push(domain);
+                }
+            });
 
             if (!name) {
-                showToast('❌ 請輸入廠商名稱');
+                showToast('❌ 請輸入品牌名稱');
                 return;
             }
 
-            if (!url) {
-                showToast('❌ 請輸入基礎追蹤連結');
+            if (domains.length === 0) {
+                showToast('❌ 請至少輸入一個合作網域');
                 return;
             }
 
-            const merchant = { name, url };
+            if (!baseUrl) {
+                showToast('❌ 請輸入預設追蹤連結');
+                return;
+            }
+
+            const merchant = { name, domains, baseUrl };
 
             if (editingIndex === -1) {
                 merchants.push(merchant);
-                showToast('✅ 廠商新增成功!');
+                showToast('✅ 品牌新增成功!');
             } else {
                 merchants[editingIndex] = merchant;
-                showToast('✅ 廠商更新成功!');
+                showToast('✅ 品牌更新成功!');
             }
 
             saveMerchants();
             renderMerchantList();
-            renderMerchantSelect();
             closeModal();
         }
 
@@ -918,8 +1039,7 @@
                 merchants.splice(index, 1);
                 saveMerchants();
                 renderMerchantList();
-                renderMerchantSelect();
-                showToast('✅ 廠商已刪除');
+                showToast('✅ 品牌已刪除');
             }
         }
 
@@ -947,16 +1067,20 @@
         }
 
         function generateLink() {
-            const merchantIndex = document.getElementById('merchantSelect').value;
             const targetUrl = document.getElementById('targetUrl').value.trim();
             
-            if (merchantIndex === '') {
-                showToast('❌ 請先選擇廠商');
+            if (!targetUrl) {
+                showToast('❌ 請輸入商品網址');
                 return;
             }
 
-            const baseUrl = merchants[merchantIndex].url;
-            let finalUrl = baseUrl;
+            if (detectedMerchantIndex === -1) {
+                showToast('❌ 無法偵測品牌,請先設定此網域');
+                return;
+            }
+
+            const merchant = merchants[detectedMerchantIndex];
+            let finalUrl = merchant.baseUrl;
             let hasSubIds = false;
 
             const subIds = {
@@ -980,16 +1104,27 @@
                 finalUrl += '?' + subIdParams.join('?');
             }
 
-            if (targetUrl) {
-                const encodedTarget = doubleEncodeURL(targetUrl);
-                const connector = hasSubIds ? '&t=' : '?t=';
-                finalUrl += connector + encodedTarget;
-            }
+            const encodedTarget = doubleEncodeURL(targetUrl);
+            const connector = hasSubIds ? '&t=' : '?t=';
+            finalUrl += connector + encodedTarget;
 
             document.getElementById('resultContent').textContent = finalUrl;
             document.getElementById('resultBox').classList.add('show');
             
-            showToast('✅ 連結生成成功!');
+            // 自動複製到剪貼簿
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(finalUrl).then(() => {
+                    showToast('✅ 連結已生成並複製到剪貼簿!');
+                }).catch(() => {
+                    // 如果自動複製失敗,使用備用方法
+                    fallbackCopy(finalUrl);
+                    showToast('✅ 連結生成成功!');
+                });
+            } else {
+                // 舊版瀏覽器使用備用複製方法
+                fallbackCopy(finalUrl);
+                showToast('✅ 連結已生成並複製到剪貼簿!');
+            }
         }
 
         function copyResult() {
@@ -1023,7 +1158,6 @@
         }
 
         function clearGenerate() {
-            document.getElementById('merchantSelect').value = '';
             document.getElementById('targetUrl').value = '';
             document.getElementById('subid1').value = '';
             document.getElementById('subid2').value = '';
@@ -1032,6 +1166,9 @@
             document.getElementById('subid5').value = '';
             document.getElementById('uniqueid').value = '';
             document.getElementById('resultBox').classList.remove('show');
+            document.getElementById('detectedMerchant').classList.remove('show');
+            document.getElementById('errorBox').classList.remove('show');
+            detectedMerchantIndex = -1;
             showToast('🗑️ 已清空欄位');
         }
 
